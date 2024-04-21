@@ -12,6 +12,7 @@ module sigpulse #(
   input io_rst,
 
   input io_en,
+  input pwm_dis,
 
   output io_pulseOut,
   // output io_delayOut,
@@ -34,6 +35,9 @@ module sigpulse #(
       // cnt_delay <= io_trigDelay;
       cnt_pulseWidth <= io_pulseWidth;
     end
+    else if (pwm_dis) begin
+      cnt_pulseWidth <= 0;
+    end
     else begin
       // cnt_delay <= |cnt_delay ? cnt_delay - 1'd1:cnt_delay;
       cnt_pulseWidth <= |cnt_pulseWidth ? cnt_pulseWidth - 1'd1 : cnt_pulseWidth;
@@ -54,12 +58,18 @@ module sigpulse #(
     else if ((cnt_pulseWidth == 0)&&(cnt_pulseWidth_d1 == 1)) begin
       p_valid <= 1'b1;
     end
+    else if (pwm_dis) begin
+      p_valid <= 1'b1;
+    end
+    else if (p_valid) begin
+      p_valid <= 0;
+    end
     else begin
       p_valid <= 0;
     end
   end
   assign pulse_valid = p_valid ;
-  assign io_pulseOut = ~(cnt_pulseWidth == 0) ^ io_defaultLevel;
+  assign io_pulseOut = (~(cnt_pulseWidth == 0) ^ io_defaultLevel)&(~pwm_dis);
   // assign io_delayOut = (cnt_delay == 0) & delay_d;
 
 endmodule

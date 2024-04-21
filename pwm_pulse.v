@@ -34,14 +34,14 @@ sigpulse #(
     .io_clk(io_clk),
     .io_rst(io_rst),
 
-  .io_en(sig_pul_en),
-
-  .io_pulseOut(io_pulseOut),
+    .io_en(sig_pul_en),
+    .pwm_dis(pwm_dis),
+    .io_pulseOut(io_pulseOut),
   // output io_delayOut,
 
-  .io_defaultLevel(io_defaultLevel),
-  .io_pulseWidth(io_pulseWidth),
-  .pulse_valid(sig_pul_valid)
+    .io_defaultLevel(io_defaultLevel),
+    .io_pulseWidth(io_pulseWidth),
+    .pulse_valid(sig_pul_valid)
   // input [_RAM_WIDTH - 1:0] io_trigDelay
 );
 // pulse phase
