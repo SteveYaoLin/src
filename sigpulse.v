@@ -25,7 +25,7 @@ module sigpulse #(
 
   // reg [_RAM_WIDTH - 1:0] cnt_delay = 0;
   reg [_RAM_WIDTH - 1:0] cnt_pulseWidth = 0;
-  reg en_d1;
+  // reg en_d1;
   always @ (posedge io_clk or posedge io_rst) begin
     if(io_rst)begin
       // cnt_delay <= 0;
@@ -46,7 +46,7 @@ module sigpulse #(
 
   
   reg p_valid;
-  reg cnt_pulseWidth_d1;
+  reg [_RAM_WIDTH - 1:0] cnt_pulseWidth_d1;
   always @ (posedge io_clk) begin
     // en_d1 <= io_en;
     cnt_pulseWidth_d1 <= cnt_pulseWidth;

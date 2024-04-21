@@ -25,6 +25,7 @@ reg [_RAM_WIDTH - 1:0] cnt_free_d1;// keep clock
 // reg [_RAM_WIDTH - 1:0] pulse_access;// Number of clocks
 // reg [_RAM_WIDTH - 1:0] io_unaccessWidth;
 reg pwm_dis;
+reg pwm_dis_d1;
 reg pwm_en;
 reg pulse_mode;//0 is signal ; 1 is conitnue
  
@@ -103,7 +104,7 @@ always @(posedge io_clk or posedge io_rst) begin
         cnt_free <= 0;
         unaccess_valid <= 0;
     end
-    else if ((sig_pul_valid == 1'b1) && (io_unaccessWidth != 0)) begin
+    else if ((sig_pul_valid == 1'b1) && (io_unaccessWidth != 0) && (pwm_dis_d1 == 1'b0)) begin
         cnt_free <= io_unaccessWidth;
     end
     else if ((cnt_free == 0 )&& (cnt_free_d1 == 1) ) begin //?
@@ -122,11 +123,13 @@ always @(posedge io_clk or posedge io_rst) begin
     if (io_rst == 1'b1) begin
         cnt_free_d1 <= 0;
         pwm_en <= 1'b0 ; 
+        pwm_dis_d1 <= 1'b0 ;
 
     end
     else begin
         cnt_free_d1 <= cnt_free ;
         pwm_en <= io_en ; 
+        pwm_dis_d1 <= pwm_dis ;
     end
 end
 // create final pulse 
