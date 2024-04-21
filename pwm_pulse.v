@@ -57,7 +57,7 @@ always @(posedge io_clk or posedge io_rst) begin
     pulse_mode <= 1'b0;
     cnt_pulse <= 0;
     pulse_busy <= 1'b0;
-    pulse_valid <= 1'b1;
+    pulse_valid <= (pulse_busy)? 1'b1 : 1'b0;
     // sig_pul_en <= 1'b0;
     end
     else if ((io_en == 1'b1)&&(pwm_en == 0) )begin //starting
@@ -83,7 +83,7 @@ always @(posedge io_clk or posedge io_rst) begin
         sig_pul_en <= 1'b1;
         pulse_busy <= 1'b1;
     end
-    else if ((cnt_pulse_d1 == 1)&& (cnt_pulse == 0)&&(sig_pul_valid == 1'b1)) begin // final free phase valid
+    else if ((cnt_pulse_d1 == 1)&& (cnt_pulse == 0)&&(unaccess_valid == 1'b1)) begin // final free phase valid
         pulse_busy <= 1'b0; 
         pulse_valid <= 1'b1;
     end
@@ -134,7 +134,7 @@ always @(posedge io_clk or posedge io_rst) begin
     if (io_rst == 1'b1) begin
         cnt_pulse_d1 <= 0;// 
     end
-    else if (sig_pul_en&&(cnt_pulse != io_pusle_times) ) begin
+    else if (unaccess_valid | pulse_valid) begin
         cnt_pulse_d1 <= cnt_pulse ;
     end
     else if (pwm_dis) begin
@@ -142,6 +142,7 @@ always @(posedge io_clk or posedge io_rst) begin
     end
 end
 // create disable
+// assign pwm_dis = ~ io_en;
 always @(posedge io_clk or posedge io_rst) begin
     if (io_rst == 1'b1) begin
         pwm_dis <= 1'b0;
